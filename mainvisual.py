@@ -124,10 +124,9 @@ class Cube():
         self.white[6:], self.red[6:], self.yellow[2::-1], self.orange[6:] = self.red[6:], self.yellow[2::-1], self.orange[6:], self.white[6:]
         self.rotate(self.green, False)
         return self
-
 cube = Cube()
 print("Orient the white side of the cube towards yourself and\n the blue side of the cube towards the ceiling\n")
-moves = input("Now Enter Moves Using Cube Notation. Seperate moves with space: \n").split(' ')
+moves = input("Now Enter Moves Using Cube Notation. Separate moves with space: \n").split(' ')
 seq = []
 for move in moves:
     move = move.lower()
@@ -156,9 +155,6 @@ for move in moves:
     elif move == r"d'":
         seq.append(cube.D_)
 
-for i in range(len(seq)):
-    seq[i]()
-
 
 relation = {
     'R': (0,0,255),
@@ -169,48 +165,58 @@ relation = {
     "O" : (0,165,255)
 }
 blank = np.zeros((800, 800, 3), dtype = 'uint8')
-
-cv.rectangle(blank, (300,300), (350,350), relation[cube.white[0]], -1)
-cv.rectangle(blank, (355,300), (405,350), relation[cube.white[1]], -1)
-cv.rectangle(blank, (410,300), (460,350), relation[cube.white[2]], -1)
-cv.rectangle(blank, (300,355), (350,405), relation[cube.white[3]], -1)
-cv.rectangle(blank, (355,355), (405,405), relation[cube.white[4]], -1)
-cv.rectangle(blank, (410,355), (460,405), relation[cube.white[5]], -1)
-cv.rectangle(blank, (300,410), (350,460), relation[cube.white[6]], -1)
-cv.rectangle(blank, (355,410), (405,460), relation[cube.white[7]], -1)
-cv.rectangle(blank, (410,410), (460,460), relation[cube.white[8]], -1)
-
-count = 255
-n = 11
-for i in range(295,224,-24): #Blue side
-    count += 45
-    n -= 6
-    for j in range(count, count + 115,57):
-        n += 1
-        pts = np.array([[j,i],[j+50,i],[j+90,i-20],[j+40,i-20]], np.int32)
-        cv.fillPoly(blank, [pts], relation[cube.blue[n]])
-
-
-#Red Side
-pts = np.array([[466, 300], [505,280],[505,330],[466,350]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[0]])
-pts = np.array([[466, 355], [505,335],[505,385],[466,405]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[3]])
-pts = np.array([[466, 410], [505,390],[505,440],[466,460]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[6]])
-
-pts = np.array([[510, 277], [549,257],[549,307],[510,327]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[1]])
-pts = np.array([[510, 332], [549,312],[549,362],[510,382]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[4]])
-pts = np.array([[510, 387], [549,367],[549,417],[510,437]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[7]])
-
-pts = np.array([[554, 254], [593,234],[593,284],[554,304]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[2]])
-pts = np.array([[554, 309], [593,289],[593,339],[554,359]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[5]])
-pts = np.array([[554, 364], [593,344],[593,394],[554,414]], np.int32)
-cv.fillPoly(blank, [pts], relation[cube.red[8]])
 cv.imshow('screen', blank)
-cv.waitKey(20000)
+cv.waitKey(5000)
+def draw():
+    global blank
+    cv.rectangle(blank, (300,300), (350,350), relation[cube.white[0]], -1)
+    cv.rectangle(blank, (355,300), (405,350), relation[cube.white[1]], -1)
+    cv.rectangle(blank, (410,300), (460,350), relation[cube.white[2]], -1)
+    cv.rectangle(blank, (300,355), (350,405), relation[cube.white[3]], -1)
+    cv.rectangle(blank, (355,355), (405,405), relation[cube.white[4]], -1)
+    cv.rectangle(blank, (410,355), (460,405), relation[cube.white[5]], -1)
+    cv.rectangle(blank, (300,410), (350,460), relation[cube.white[6]], -1)
+    cv.rectangle(blank, (355,410), (405,460), relation[cube.white[7]], -1)
+    cv.rectangle(blank, (410,410), (460,460), relation[cube.white[8]], -1)
+
+    count = 255
+    n = 11
+    for i in range(295,224,-24): #Blue side
+        count += 45
+        n -= 6
+        for j in range(count, count + 115,57):
+            n += 1
+            pts = np.array([[j,i],[j+50,i],[j+90,i-20],[j+40,i-20]], np.int32)
+            cv.fillPoly(blank, [pts], relation[cube.blue[n]])
+
+
+    #Red Side
+    pts = np.array([[466, 300], [505,280],[505,330],[466,350]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[0]])
+    pts = np.array([[466, 355], [505,335],[505,385],[466,405]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[3]])
+    pts = np.array([[466, 410], [505,390],[505,440],[466,460]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[6]])
+
+    pts = np.array([[510, 277], [549,257],[549,307],[510,327]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[1]])
+    pts = np.array([[510, 332], [549,312],[549,362],[510,382]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[4]])
+    pts = np.array([[510, 387], [549,367],[549,417],[510,437]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[7]])
+
+    pts = np.array([[554, 254], [593,234],[593,284],[554,304]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[2]])
+    pts = np.array([[554, 309], [593,289],[593,339],[554,359]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[5]])
+    pts = np.array([[554, 364], [593,344],[593,394],[554,414]], np.int32)
+    cv.fillPoly(blank, [pts], relation[cube.red[8]])
+
+
+for i in seq:
+    i()
+    draw()
+    cv.imshow('screen', blank)
+    cv.waitKey(100)
+cv.imshow('screen', blank)
+cv.waitKey(0)
