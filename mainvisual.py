@@ -48,64 +48,34 @@ class Cube():
         else:
             side[0:2], side[2:6:3], side[:-3:-1], side[6:2:-3] = side[2:6:3], side[:-3:-1], side[6:2:-3], side[0:2]
     def R(self):
-        chain = [self.white, self.blue, self.yellow, self.green]
-        duplicate = [self.white[2::3], self.blue[2::3], self.yellow[2::3], self.green[2::3]]
-        for i in range(len(chain)):
-            chain[i][2::3] = duplicate[i-1]
+        self.white[2::3], self.blue[2::3], self.yellow[2::3], self.green[2::3] = self.green[2::3],self.white[2::3], self.blue[2::3], self.yellow[2::3]
         self.rotate(self.red, True)
         return (self)
 
     def R_(self):
-        chain = [self.white, self.blue, self.yellow, self.green]
-        duplicate = [0, self.blue[2::3], self.yellow[2::3], self.green[2::3], self.white[2::3]]
-        for i in range(len(chain)):
-            chain[i][2::3] = duplicate[i + 1]
+        self.white[2::3],self.blue[2::3], self.yellow[2::3], self.green[2::3] = self.blue[2::3], self.yellow[2::3], self.green[2::3],self.white[2::3]
         self.rotate(self.red, False)
         return (self)
     def M(self):
-        chain = [self.white, self.blue, self.yellow, self.green]
-        duplicate = [self.white[1::3], self.blue[1::3], self.yellow[1::3], self.green[1::3]]
-        for i in range(len(chain)):
-            chain[i][1::3] = duplicate[i-1]
+        self.white[1::3], self.blue[1::3], self.yellow[1::3], self.green[1::3] = self.green[1::3], self.white[1::3], self.blue[1::3], self.yellow[1::3]
         return (self)
     def M_(self):
-        chain = [self.white, self.blue, self.yellow, self.green]
-        duplicate = [0, self.blue[1::3], self.yellow[1::3], self.green[1::3], self.white[1::3]]
-        for i in range(len(chain)):
-            chain[i][1::3] = duplicate[i + 1]
-        return (self)
-    def L_(self):
-        chain = [self.white, self.blue, self.yellow, self.green]
-        duplicate = [self.white[0::3], self.blue[0::3], self.yellow[0::3], self.green[0::3]]
-        for i in range(len(chain)):
-            chain[i][::3] = duplicate[i-1]
-        self.rotate(self.orange, False)
+        self.white[1::3], self.blue[1::3], self.yellow[1::3], self.green[1::3] = self.blue[1::3], self.yellow[1::3], self.green[1::3],self.white[1::3]
         return (self)
     def L(self):
-        chain = [self.white, self.blue, self.yellow, self.green]
-        duplicate = [0, self.blue[0::3], self.yellow[0::3], self.green[0::3], self.white[0::3]]
-        for i in range(len(chain)):
-            chain[i][::3] = duplicate[i + 1]
+        self.white[0::3], self.blue[0::3], self.yellow[0::3], self.green[0::3] = self.blue[0::3], self.yellow[0::3], self.green[0::3],self.white[0::3]
         self.rotate(self.orange, True)
         return (self)
+    def L_(self):
+        self.white[0::3], self.blue[0::3], self.yellow[0::3], self.green[0::3] = self.green[0::3], self.white[0::3], self.blue[0::3], self.yellow[0::3]
+        self.rotate(self.orange, False)
+        return (self)
     def U(self):
-        chain = [self.white, self.orange, self.yellow, self.red]
-        duplicate = [self.white[:3], self.orange[:3], self.yellow[:5:-1], self.red[:3]]
-        for i in range(len(chain)):
-            if i == 2:
-                chain[i][:5:-1] = duplicate[i-1]
-                continue
-            chain[i][:3] = duplicate[i - 1]
+        self.white[:3], self.orange[:3], self.yellow[:5:-1], self.red[:3] = self.red[:3], self.white[:3], self.orange[:3], self.yellow[:5:-1]
         self.rotate(self.blue, True)
         return (self)
     def U_(self):
-        chain = [self.white, self.orange, self.yellow, self.red]
-        duplicate = [0, self.orange[:3], self.yellow[:5:-1], self.red[:3], self.white[:3]]
-        for i in range(len(chain)):
-            if i == 2:
-                chain[i][:5:-1] = duplicate[i+1]
-                continue
-            chain[i][:3] = duplicate[i + 1]
+        self.white[:3], self.orange[:3], self.yellow[:5:-1], self.red[:3] = self.orange[:3], self.yellow[:5:-1], self.red[:3], self.white[:3]
         self.rotate(self.blue, False)
         return self
     def F(self):
@@ -124,6 +94,27 @@ class Cube():
         self.white[6:], self.red[6:], self.yellow[2::-1], self.orange[6:] = self.red[6:], self.yellow[2::-1], self.orange[6:], self.white[6:]
         self.rotate(self.green, False)
         return self
+    def solve(self):
+        all = {self.white : [self.blue, self.red, self.green, self.orange],
+               self.blue : [self.yellow, self.red, self.white, self.orange],
+              self.yellow : [self.green, self.red, self.blue, self.orange],
+              self.red : [self.blue, self.yellow, self.green, self.white],
+              self.orange : [self.blue, self.white, self.green, self.yellow]
+
+               }
+        missing = [9, None]
+        for i in all:
+            center = i[4]
+            if len([x for x in i if x != center]) < missing[0]:
+                missing = [len([x for x in i if x != center]), i]
+        while True:
+            side = missing[i]
+            center = side[4]
+            neighboring = all[side]
+            for j in range(len(neighboring)):
+                if neighboring[j] == center:
+                    pass
+
 cube = Cube()
 print("Orient the white side of the cube towards yourself and\n the blue side of the cube towards the ceiling\n")
 moves = input("Now Enter Moves Using Cube Notation. Separate moves with space: \n").split(' ')
@@ -169,15 +160,11 @@ cv.imshow('screen', blank)
 cv.waitKey(5000)
 def draw():
     global blank
-    cv.rectangle(blank, (300,300), (350,350), relation[cube.white[0]], -1)
-    cv.rectangle(blank, (355,300), (405,350), relation[cube.white[1]], -1)
-    cv.rectangle(blank, (410,300), (460,350), relation[cube.white[2]], -1)
-    cv.rectangle(blank, (300,355), (350,405), relation[cube.white[3]], -1)
-    cv.rectangle(blank, (355,355), (405,405), relation[cube.white[4]], -1)
-    cv.rectangle(blank, (410,355), (460,405), relation[cube.white[5]], -1)
-    cv.rectangle(blank, (300,410), (350,460), relation[cube.white[6]], -1)
-    cv.rectangle(blank, (355,410), (405,460), relation[cube.white[7]], -1)
-    cv.rectangle(blank, (410,410), (460,460), relation[cube.white[8]], -1)
+    count = -1
+    for i in range(300, 411, 55):
+        for j in range(300, 411, 55):
+            count += 1
+            cv.rectangle(blank, (j, i), (j+50, i+50), relation[cube.white[count]], -1)
 
     count = 255
     n = 11
@@ -191,6 +178,8 @@ def draw():
 
 
     #Red Side
+
+
     pts = np.array([[466, 300], [505,280],[505,330],[466,350]], np.int32)
     cv.fillPoly(blank, [pts], relation[cube.red[0]])
     pts = np.array([[466, 355], [505,335],[505,385],[466,405]], np.int32)
