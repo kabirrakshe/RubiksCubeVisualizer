@@ -155,12 +155,13 @@ relation = {
     "Y" : (0,255,255),
     "O" : (0,165,255)
 }
-blank = np.zeros((800, 800, 3), dtype = 'uint8')
+blank = np.zeros((850, 1440, 3), dtype = 'uint8')
 cv.imshow('screen', blank)
-cv.waitKey(5000)
+cv.waitKey(3000)
 def draw():
     global blank
     count = -1
+    #White Side
     for i in range(300, 411, 55):
         for j in range(300, 411, 55):
             count += 1
@@ -178,29 +179,48 @@ def draw():
 
 
     #Red Side
+    xvals = [466,510,554]
+    yvals = [300,355,410]
+    n1 = -4
+    counter = None
+    for x in xvals:
+        n1 += 1
+        counter = n1
+        for y in yvals:
+            counter += 3
+            pts = np.array([[x, y], [x+39, y-20], [x+39, y+30], [x, y+50]], np.int32)
+            cv.fillPoly(blank, [pts], relation[cube.red[counter]])
+        yvals[0],yvals[1],yvals[2] = yvals[0] - 23,yvals[1]-23,yvals[2]-23
 
+    ##Yellow Side
+    count = -1
+    for i in range(300, 411, 55):
+        for j in range(1000, 1111, 55):
+            count += 1
+            cv.rectangle(blank, (j, i), (j + 50, i + 50), relation[cube.yellow[count]], -1)
+    #Green Side
+    count = 1205
+    n = 9
+    for i in range(295, 224, -24):
+        count -= 45
+        for j in range(count, count - 115, -57):
+            n -= 1
+            pts = np.array([[j, i], [j - 50, i], [j - 90, i - 20], [j - 40, i - 20]], np.int32)
+            cv.fillPoly(blank, [pts], relation[cube.green[n]])
 
-    pts = np.array([[466, 300], [505,280],[505,330],[466,350]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[0]])
-    pts = np.array([[466, 355], [505,335],[505,385],[466,405]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[3]])
-    pts = np.array([[466, 410], [505,390],[505,440],[466,460]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[6]])
-
-    pts = np.array([[510, 277], [549,257],[549,307],[510,327]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[1]])
-    pts = np.array([[510, 332], [549,312],[549,362],[510,382]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[4]])
-    pts = np.array([[510, 387], [549,367],[549,417],[510,437]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[7]])
-
-    pts = np.array([[554, 254], [593,234],[593,284],[554,304]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[2]])
-    pts = np.array([[554, 309], [593,289],[593,339],[554,359]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[5]])
-    pts = np.array([[554, 364], [593,344],[593,394],[554,414]], np.int32)
-    cv.fillPoly(blank, [pts], relation[cube.red[8]])
-
+    #Orange Side
+    xvals = [994,950,906]
+    yvals = [300,355,410]
+    n1 = 8
+    counter = None
+    for x in xvals:
+        n1 += 1
+        counter = n1
+        for y in yvals:
+            counter -= 3
+            pts = np.array([[x, y], [x-39, y-20], [x-39, y+30], [x, y+50]], np.int32)
+            cv.fillPoly(blank, [pts], relation[cube.orange[counter]])
+        yvals[0],yvals[1],yvals[2] = yvals[0] - 23,yvals[1]-23,yvals[2]-23
 
 for i in seq:
     i()
